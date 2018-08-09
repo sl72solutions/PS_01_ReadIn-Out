@@ -2,21 +2,16 @@
 <#
 .SYNOPSIS
   <Overview of script>
-
 .DESCRIPTION
   <Brief description of script>
-
 .PARAMETER <Parameter_Name>
     <Brief description of parameter input required. Repeat this attribute if required>
-
 .INPUTS
   <Inputs if any, otherwise state None>
-
 .OUTPUTS
   <Outputs if any, otherwise state None - example: Log file stored in C:\Windows\Temp\<name>.log>
-
 .NOTES
-  Version:        1.0
+  Version:        2.1
   Author:         <Name>
   Creation Date:  <Date>
   Purpose/Change: Initial script development
@@ -28,24 +23,13 @@
 [CmdletBinding()]
 Param (
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$webRequest = Invoke-WebRequest -Uri https://github.com/sl72solutions/PS_01_ReadIn-Out/blob/master/laptop_detail.csv
-
-#$webRequest = Invoke-WebRequest https://github.com/sl72solutions/PS_01_ReadIn-Out/blob/master/laptop_detail.csv
-   
-$sReadFile = ConvertFrom-StringData -StringData $webRequest.Content
-
-    #  [string][Parameter(mandatory = $False, Position = 2)] $PetesDoc = "$env:USERPROFILE\Desktop\PetesDoc-$(Get-Date -Format ddMMyyyy).csv",
 )
 
 <#---------------------------------------------------------[Initialisations]--------------------------------------------------------
-
 #Set Error Action to Silently Continue
 #$ErrorActionPreference = "SilentlyContinue"
-
 #Dot Source required Function Libraries
 #"C:\Scripts\Functions\Logging_Functions.ps1"
-
 #----------------------------------------------------------[Declarations]---------------------------------------------------------- #>
 
 #Script Version
@@ -98,7 +82,21 @@ $sScriptVersion = "2.0"
     End {
         $VerbosePreference = $OldVerbosePreference
     }
-}     
+}   
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webRequest = Invoke-WebRequest -Uri https://github.com/sl72solutions/PS_01_ReadIn-Out/blob/master/laptop_detail.csv
+#$webRequest = Invoke-WebRequest https://github.com/sl72solutions/PS_01_ReadIn-Out/blob/master/laptop_detail.csv
+#[string][Parameter(mandatory = $False, Position = 2)] $PetesDoc = "$env:USERPROFILE\Desktop\PetesDoc-$(Get-Date -Format ddMMyyyy).csv", 
+$sReadFile = ConvertFrom-StringData -StringData $webRequest.Content
+
+  if (!$sReadFile)     {
+                [System.Windows.Forms.MessageBox]::Show('Laptop detail file not found, please check folder','Is file there?','OK')
+                Break   
+                } 
+
+ 
+
 
 Function GetFile_2_ExportXLS{
         Begin{
